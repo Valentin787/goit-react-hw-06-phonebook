@@ -21,27 +21,11 @@ const App = () => {
       })
       .join(' ');
 
-  const addContacts = obj => {
-   
-    const isHaveName = contactsBook.some(({ name }) => name === obj.name);
-
-    if (isHaveName) {
-      return alert(`${normalizeName(obj.name)} is alredy in contacts.`);
-    }};
-
-
-  const filterContacts = filterBookContacts => {
-    const normalizedData = filterBookContacts.toLowerCase();
-    const arrayFilter = contactsBook.filter(({ name }) =>
-      name.toLowerCase().includes(normalizedData),
-    );
-    return arrayFilter;
-  };
 
   return (
     <div className={s.app}>
       <h1>Phonebook</h1>
-      <ContactForm onSubmitForm={addContacts} />
+      <ContactForm  normalizeName={normalizeName}/>
       <h2>Contacts</h2>
 
     {contactsBook.length > 1 && (
@@ -53,8 +37,6 @@ const App = () => {
       {!contactsBook.length && <p>Please, add contact!</p>}
         <ContactList
           normalizeName={normalizeName}
-          filterContacts={filterContacts}
-          filterName={filterBookContacts}
         />
       
     </div>

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import { nanoid } from 'nanoid';
 import { actionAddContacts } from 'redux/phoneBook/phoneBookActions';
 import Input from '../../common/Input';
 import s from './ContactForm.module.css';
 
-const ContactForm = ({ onSubmitForm}) => {
+const ContactForm = ({normalizeName}) => {
+   const contactsBook = useSelector((state) => state.contacts.item)
   const dispatch = useDispatch()
   const [dataForm, setdataForm] = useState({
     name: '',
@@ -33,9 +34,13 @@ const ContactForm = ({ onSubmitForm}) => {
       id: nanoid(),
       ...dataForm
     };
+    const isHaveName = contactsBook.some(({ name }) => name === objData.name);
+
+    if (isHaveName) {
+      return alert(`${normalizeName(objData.name)} is alredy in contacts.`);
+    };
    
     dispatch(actionAddContacts(objData))
-    onSubmitForm(objData);
     resetForm();
   };
 

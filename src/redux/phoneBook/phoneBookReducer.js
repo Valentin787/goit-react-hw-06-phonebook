@@ -3,15 +3,12 @@ import {actionAddContacts,removeContacts,filterContacts} from './phoneBookAction
 
 const initialItems = [];
 const contactsItemReducer = createReducer(initialItems, {
-    [actionAddContacts]: (state, { payload }) => {
-        const contact = [...state, payload];
-        return contact
-    },
+    [actionAddContacts]: (state, { payload }) => [...state, payload],
     [removeContacts]:(state, {payload}) => state.filter(item => item.id !== payload)
 })
 
 const filterContactsReducer = createReducer("", {
-    [filterContacts]:(_,{payload}) => payload
+    [filterContacts]: (_, { payload }) => payload.toLowerCase()
 })
 
 const phoneBookReducer = combineReducers({
