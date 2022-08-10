@@ -4,8 +4,5 @@ export const actionAddContacts = createAction("contacts/add")
 
 export const removeContacts = createAction("contacts/remove")
 
-export const filterContacts = createAction("contacts/filter", (event) => {
-  return {
-    payload:event.target.value,
-  }
-})
+export const filterContacts = createAction("contacts/filter")
+

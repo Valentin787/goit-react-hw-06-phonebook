@@ -1,57 +1,49 @@
 import { useState } from 'react';
-import {useDispatch, useSelector} from 'react-redux'
+import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
-import { actionAddContacts } from 'redux/phoneBook/phoneBookActions';
 import Input from '../../common/Input';
 import s from './ContactForm.module.css';
 
-const ContactForm = ({normalizeName}) => {
-   const contactsBook = useSelector((state) => state.contacts.item)
-  const dispatch = useDispatch()
-  const [dataForm, setdataForm] = useState({
-    name: '',
-    number: '',
-   
-  });
+const ContactForm = ({ confirmContact }) => {
+    const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  const resetForm = () =>
-    setdataForm({
-      name: '',
-      number: '',
-    });
-
-  const addDataForm = e => {
-    return setdataForm(prevState => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const normalizeName = name => name
+      .split(' ')
+      .map(word => {
+        const firstUpCaseLetter = word.charAt(0).toUpperCase();
+        const anoterLetter = word.substring(1);
+        return `${firstUpCaseLetter}${anoterLetter}`;
+      })
+      .join(' ');
 
   const onSubFormData = e => {
     e.preventDefault();
 
     const objData = {
       id: nanoid(),
-      ...dataForm
+      name:normalizeName(name),
+      number
     };
-    const isHaveName = contactsBook.some(({ name }) => name === objData.name);
 
-    if (isHaveName) {
-      return alert(`${normalizeName(objData.name)} is alredy in contacts.`);
-    };
-   
-    dispatch(actionAddContacts(objData))
+    confirmContact(objData);
     resetForm();
-  };
 
-  const { name, number } = dataForm;
+  };
+  const resetForm = () => {
+    setName('');
+    setNumber('');
+  }
+
   return (
-    <form onSubmit={onSubFormData} className={s.form}>
+       <>
+      <h1>Phonebook</h1>
+      <form onSubmit={onSubFormData} className={s.form}>
       <Input
         label="Name"
         type="text"
         name="name"
-        onChange={addDataForm}
+        onChange={(e) => setName(e.target.value)}
         value={name}
         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
@@ -62,7 +54,7 @@ const ContactForm = ({normalizeName}) => {
         label="Number"
         type="tel"
         name="number"
-        onChange={addDataForm}
+        onChange={(e) => setNumber(e.target.value)}
         value={number}
         pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
@@ -73,8 +65,13 @@ const ContactForm = ({normalizeName}) => {
         {' '}
         Add contact
       </button>
-    </form>
+      </form>
+      <h2>Contacts</h2>
+    </>
   );
+};
+ContactForm.propTypes = {
+  confirmContact: PropTypes.func,
 };
 
 export default ContactForm;

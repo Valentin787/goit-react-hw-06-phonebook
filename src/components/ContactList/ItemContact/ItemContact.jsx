@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
 import s from './ItemContact.module.css';
-import { removeContacts } from 'redux/phoneBook/phoneBookActions'; 
-import { useDispatch } from 'react-redux';
 
-const ItemContact = ({ name, number,id, normalizeName }) => {
+const ItemContact = ({
+  onDeleteContact,
+  name,
+  number,
+  id}) => {
 
-  const dispatch = useDispatch()
   return (
     <li className={s.item} id={id}>
-      {normalizeName(name)}: {number}
+      {name}: {number}
       <button
         className={s.btnDel}
-        onClick={()=>dispatch(removeContacts(id))
-        }
+        onClick={onDeleteContact}
         type="button"
       >
         Delete
@@ -24,7 +24,10 @@ const ItemContact = ({ name, number,id, normalizeName }) => {
 ItemContact.propTypes = {
   name: PropTypes.string.isRequired,
   number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  onDeleteContact: PropTypes.func,
+  id:PropTypes.string,
 };
+
 
 export default ItemContact;
 
